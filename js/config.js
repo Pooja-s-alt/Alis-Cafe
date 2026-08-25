@@ -27,13 +27,13 @@ const CAFE_CONFIG = {
     "assets/images/hero-bg.jpg"
   ],
   aboutImages: [
-    "assets/images/story_cafe.jpg"
+    "assets/images/story-cafe.jpg"
   ],
   storyImages: [
     "assets/images/hero-bg.jpg"
   ],
   about: {
-    image: "assets/images/story_cafe.jpg",
+    image: "assets/images/story-cafe.jpg",
     paragraph1: "Welcome to Ali’s Cafe, Bharathi Nagar, Ramnad — a sanctuary crafted for flavor lovers, families, and travelers. We take pride in cold-pressed 100% natural juices, handcrafted artisanal ice cream sundaes, and gourmet fast food served in a warm atmosphere."
   },
 

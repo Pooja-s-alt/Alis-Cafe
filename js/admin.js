@@ -123,7 +123,7 @@ function loadConfigIntoForms() {
 
   // Render Section Image Tables
   renderHeroImagesTable(cfg.heroImages || ["assets/images/hero-bg.jpg"]);
-  renderAboutImagesTable(cfg.aboutImages || ["assets/images/story_cafe.jpg"]);
+  renderAboutImagesTable(cfg.aboutImages || ["assets/images/story-cafe.jpg"]);
   renderStoryImagesTable(cfg.storyImages || ["assets/images/hero-bg.jpg"]);
 
   // Populate Menu Items Table
@@ -202,7 +202,7 @@ window.addAboutImage = function() {
   const src = document.getElementById('new-about-img-src').value.trim();
   if (!src) return alert('Please enter about image path!');
   const cfg = getActiveConfig();
-  if (!cfg.aboutImages) cfg.aboutImages = ["assets/images/story_cafe.jpg"];
+  if (!cfg.aboutImages) cfg.aboutImages = ["assets/images/story-cafe.jpg"];
   cfg.aboutImages.push(src);
   document.getElementById('new-about-img-src').value = '';
   saveConfig(cfg);
