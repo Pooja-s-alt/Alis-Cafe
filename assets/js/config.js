@@ -14,12 +14,12 @@ const CAFE_CONFIG = {
   // Brand Details
   brand: {
     name: "Ali’s Cafe",
-    tagline: "Fresh Juices. Artisanal Ice Creams. Gourmet Food.",
+    tagline: "Loaded Fries. Artisanal Ice Creams. Gourmet Food.",
     establishedYear: "2021",
     logoImage: "assets/images/logo.png",
     logoSymbol: "🧃",
     founder: "Ali",
-    shortDescription: "Welcome to Ali’s Cafe — your destination on Rameswaram Road, Bharathi Nagar, Ramnad for cold-pressed natural juices, handcrafted artisanal ice creams, and freshly prepared gourmet food."
+    shortDescription: "Welcome to Ali’s Cafe — your destination on Rameswaram Road, Bharathi Nagar, Ramnad for loaded fries, handcrafted artisanal ice creams, and freshly prepared gourmet food."
   },
 
   // Hero & Section Local PC Image Paths
