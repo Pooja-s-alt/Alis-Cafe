@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ali’s Cafe — Admin Control Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+
+<body>
+
+  <!-- Passcode Login Screen -->
+  <div class="admin-login-wrapper" id="login-wrapper">
+    <div class="login-card">
+      <div class="login-icon">⚙️</div>
+      <h1 class="login-title">Ali’s Cafe Admin</h1>
+      <p class="login-desc">Enter your 4-digit security PIN to access the Admin Control Center.</p>
+      <input type="password" id="pin-input" class="pin-input" placeholder="••••" maxlength="6" autofocus>
+      <button class="btn-admin btn-admin-primary" id="login-btn" style="width:100%; justify-content:center; padding:0.85rem;">Login to Dashboard ➔</button>
+      <p style="margin-top:1.5rem; font-size:0.8rem; color:var(--clr-admin-muted);">Default Admin PIN: <strong>1234</strong></p>
+    </div>
+  </div>
+
+  <!-- Main Admin Dashboard App -->
+  <div class="admin-app" id="admin-app" style="display:none;">
+
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <span style="font-size:1.5rem;">⚙️</span>
+        <div>
+          <div class="admin-brand-title">Ali’s Cafe</div>
+          <div style="font-size:0.75rem; color:var(--clr-admin-gold);">Admin Control Center</div>
+        </div>
+      </div>
+
+      <ul class="admin-nav">
+        <li class="admin-nav-item active" data-tab="home">🏠 Home & Contact</li>
+        <li class="admin-nav-item" data-tab="story">📊 Stats & Story</li>
+        <li class="admin-nav-item" data-tab="menu">🍔 Menu Items Manager</li>
+        <li class="admin-nav-item" data-tab="specials">🌟 Specials Highlights</li>
+        <li class="admin-nav-item" data-tab="gallery">🖼️ Gallery Manager</li>
+        <li class="admin-nav-item" data-tab="system">⚙️ Settings & Export</li>
+      </ul>
+
+      <div style="padding:1.5rem; border-top:1px solid var(--clr-admin-border);">
+        <button class="btn-admin btn-admin-danger" id="logout-btn" style="width:100%; justify-content:center;">Lock Dashboard 🔒</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="admin-content">
+
+      <!-- Topbar Controls -->
+      <header class="admin-topbar">
+        <div class="topbar-title">Content & System Manager</div>
+        <div class="topbar-actions">
+          <a href="index.html" target="_blank" class="btn-admin btn-admin-outline">👁️ View Live Website</a>
+          <button class="btn-admin btn-admin-primary" onclick="saveAllSettings()">⚡ Save & Apply Live</button>
+          <button class="btn-admin btn-admin-outline" onclick="exportConfigFile()">📥 Export config.js</button>
+        </div>
+      </header>
+
+      <!-- Workspace Tabs -->
+      <main class="admin-workspace">
+
+        <!-- TAB 1: HOME & CONTACT -->
+        <div class="tab-pane active" id="tab-home">
+          <div class="admin-card">
+            <div class="card-title">Home Page Banner Content</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Brand Name</label>
+                <input type="text" id="cfg-brand-name" class="form-input">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tagline Subheading</label>
+                <input type="text" id="cfg-tagline" class="form-input">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Hero Badge Pill</label>
+                <input type="text" id="cfg-hero-badge" class="form-input">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Hero Main Title</label>
+                <input type="text" id="cfg-hero-headline" class="form-input">
+              </div>
+              <div class="form-group form-grid-full">
+                <label class="form-label">Hero Description Subtext</label>
+                <textarea id="cfg-hero-subtext" class="form-textarea"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- HOME BANNER IMAGE MANAGER (ADD, EDIT, DELETE & PC UPLOAD) -->
+          <div class="admin-card">
+            <div class="card-title">Home Banner Image Manager (Upload from PC 📁, Edit & Delete) 🖼️</div>
+            <div class="form-grid" style="margin-bottom:1.5rem;">
+              <div class="form-group form-grid-full">
+                <label class="form-label">Add New Home Banner Image (Upload from PC 📁 or Enter Path)</label>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                  <input type="file" accept="image/*" class="form-input" style="flex:1;" onchange="handleFileUpload(this, 'new-hero-img-src')">
+                  <input type="text" id="new-hero-img-src" class="form-input" style="flex:1;" placeholder="assets/images/hero-bg.jpg or uploaded PC image">
+                  <button class="btn-admin btn-admin-primary" onclick="addHeroImage()" style="flex-shrink:0;">Add Image ➕</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="admin-table-wrapper">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Preview</th>
+                    <th>Image Path / PC File</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="hero-img-table-body">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="card-title">Contact & Location Info</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="text" id="cfg-phone" class="form-input">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Full Address</label>
+                <input type="text" id="cfg-address" class="form-input">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: STATS & STORY -->
+        <div class="tab-pane" id="tab-story">
+          <div class="admin-card">
+            <div class="card-title">Stats Counters (Home Page Numbers)</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Established Year</label>
+                <input type="text" id="cfg-stat-est" class="form-input">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Happy Guests Count</label>
+                <input type="text" id="cfg-stat-guests" class="form-input">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Menu Delights Count (e.g. 60+)</label>
+                <input type="text" id="cfg-stat-delights" class="form-input">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Years of Growth Count (e.g. 5+)</label>
+                <input type="text" id="cfg-stat-years" class="form-input">
+              </div>
+            </div>
+          </div>
+
+          <!-- ABOUT US IMAGE MANAGER (ADD, EDIT, DELETE & PC UPLOAD) -->
+          <div class="admin-card">
+            <div class="card-title">About Us Image Manager (Upload from PC 📁, Edit & Delete) 🖼️</div>
+            <div class="form-grid" style="margin-bottom:1.5rem;">
+              <div class="form-group form-grid-full">
+                <label class="form-label">Add New About Section Photo (Upload from PC 📁 or Enter Path)</label>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                  <input type="file" accept="image/*" class="form-input" style="flex:1;" onchange="handleFileUpload(this, 'new-about-img-src')">
+                  <input type="text" id="new-about-img-src" class="form-input" style="flex:1;" placeholder="assets/images/story_cafe.jpg or uploaded PC image">
+                  <button class="btn-admin btn-admin-primary" onclick="addAboutImage()" style="flex-shrink:0;">Add Image ➕</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="admin-table-wrapper" style="margin-bottom:1.5rem;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Preview</th>
+                    <th>Image Path / PC File</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="about-img-table-body">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="form-group form-grid-full">
+              <label class="form-label">About Us Text Description</label>
+              <textarea id="cfg-about-p1" class="form-textarea"></textarea>
+            </div>
+          </div>
+
+          <!-- OUR STORY IMAGE MANAGER (ADD, EDIT, DELETE & PC UPLOAD) -->
+          <div class="admin-card">
+            <div class="card-title">Our Story Image Manager (Upload from PC 📁, Edit & Delete) 🖼️</div>
+            <div class="form-grid" style="margin-bottom:1.5rem;">
+              <div class="form-group form-grid-full">
+                <label class="form-label">Add New Story Section Photo (Upload from PC 📁 or Enter Path)</label>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                  <input type="file" accept="image/*" class="form-input" style="flex:1;" onchange="handleFileUpload(this, 'new-story-img-src')">
+                  <input type="text" id="new-story-img-src" class="form-input" style="flex:1;" placeholder="assets/images/hero-bg.jpg or uploaded PC image">
+                  <button class="btn-admin btn-admin-primary" onclick="addStoryImage()" style="flex-shrink:0;">Add Image ➕</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="admin-table-wrapper" style="margin-bottom:1.5rem;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Preview</th>
+                    <th>Image Path / PC File</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="story-img-table-body">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="form-group form-grid-full" style="margin-bottom:1rem;">
+              <label class="form-label">Our Journey Paragraph 1</label>
+              <textarea id="cfg-story-p1" class="form-textarea"></textarea>
+            </div>
+            <div class="form-group form-grid-full">
+              <label class="form-label">Our Journey Paragraph 2</label>
+              <textarea id="cfg-story-p2" class="form-textarea"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: MENU ITEMS MANAGER -->
+        <div class="tab-pane" id="tab-menu">
+          <div class="admin-card">
+            <div class="card-title">Add New Menu Dish (Upload from PC 📁 or Enter Path) ➕</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Dish Name</label>
+                <input type="text" id="new-dish-name" class="form-input" placeholder="e.g. Pistachio Milkshake">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Category</label>
+                <select id="new-dish-category" class="form-select">
+                  <option value="Ice Creams">Ice Creams & Waffles</option>
+                  <option value="Juices & Drinks">Juices & Drinks</option>
+                  <option value="Food">Gourmet Food</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tag Badge (Optional)</label>
+                <input type="text" id="new-dish-tag" class="form-input" placeholder="e.g. Chef Special">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Upload Photo from PC 📁</label>
+                <input type="file" accept="image/*" class="form-input" onchange="handleFileUpload(this, 'new-dish-image')">
+              </div>
+              <div class="form-group form-grid-full">
+                <label class="form-label">Image Path / Data URL</label>
+                <input type="text" id="new-dish-image" class="form-input" placeholder="assets/images/your-dish.jpg or uploaded file">
+              </div>
+              <div class="form-group form-grid-full" style="margin-top:0.5rem;">
+                <button class="btn-admin btn-admin-primary" onclick="addNewMenuItem()">Add Dish to Menu ➕</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="card-title">
+              <span>All Menu Dishes</span>
+              <span class="btn-admin btn-admin-outline" id="menu-item-count" style="font-size:0.8rem;">63 Items</span>
+            </div>
+            <div class="admin-table-wrapper">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Photo</th>
+                    <th>Dish Name</th>
+                    <th>Category</th>
+                    <th>Tag</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="menu-table-body">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: SPECIALS HIGHLIGHTS -->
+        <div class="tab-pane" id="tab-specials">
+          <div class="admin-card">
+            <div class="card-title">Add New Special Item (Upload from PC 📁 or Enter Path) ➕</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Special Dish Name</label>
+                <input type="text" id="new-special-name" class="form-input" placeholder="e.g. Pistachio Kunafa Sundae">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tag Badge</label>
+                <input type="text" id="new-special-tag" class="form-input" placeholder="e.g. 👑 Chef Special">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Upload Photo from PC 📁</label>
+                <input type="file" accept="image/*" class="form-input" onchange="handleFileUpload(this, 'new-special-img')">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Image Path / Data URL 🖼️</label>
+                <input type="text" id="new-special-img" class="form-input" placeholder="assets/images/pistachio-kunafa-sundae.png or uploaded file">
+              </div>
+              <div class="form-group form-grid-full">
+                <label class="form-label">Description</label>
+                <textarea id="new-special-desc" class="form-textarea" placeholder="Crispy golden kunafa pastry layered with pistachio cream..."></textarea>
+              </div>
+              <div class="form-group form-grid-full">
+                <button class="btn-admin btn-admin-primary" onclick="addNewSpecialItem()">Add Special Highlight ➕</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="specials-form-container">
+            <!-- Rendered dynamically for special items -->
+          </div>
+          <button class="btn-admin btn-admin-primary" onclick="saveAllSettings()" style="width:100%; justify-content:center; padding:1rem;">Save Specials Highlights ⚡</button>
+        </div>
+
+        <!-- TAB 5: GALLERY MANAGER -->
+        <div class="tab-pane" id="tab-gallery">
+          <div class="admin-card">
+            <div class="card-title">Add New Space Photo to Gallery (Upload from PC 📁 or Enter Path) ➕</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Photo Title</label>
+                <input type="text" id="new-space-title" class="form-input" placeholder="e.g. VIP Seating Lounge">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Category</label>
+                <select id="new-space-category" class="form-select">
+                  <option value="Interior">Interior</option>
+                  <option value="Exterior">Exterior</option>
+                  <option value="Decor & Lights">Decor & Lights</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Upload Photo from PC 📁</label>
+                <input type="file" accept="image/*" class="form-input" onchange="handleFileUpload(this, 'new-space-src')">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Image Path / Data URL</label>
+                <input type="text" id="new-space-src" class="form-input" placeholder="assets/images/your-space-photo.jpg or uploaded file">
+              </div>
+              <div class="form-group form-grid-full" style="margin-top:0.5rem;">
+                <button class="btn-admin btn-admin-primary" onclick="addNewGalleryItem()">Add Photo to Gallery ➕</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="card-title">Gallery Space Photos</div>
+            <div class="admin-table-wrapper">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Photo</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="gallery-table-body">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 6: SETTINGS & EXPORT -->
+        <div class="tab-pane" id="tab-system">
+          <div class="admin-card">
+            <div class="card-title">Export & Permanently Save Changes</div>
+            <p style="color:var(--clr-admin-muted); margin-bottom:1.5rem;">
+              When you edit settings in this Admin Panel, changes are saved to browser storage and update the live site instantly. To permanently save your changes into your project source code, click <strong>Export config.js</strong> below and replace `assets/js/config.js`.
+            </p>
+            <div style="display:flex; gap:1rem;">
+              <button class="btn-admin btn-admin-primary" onclick="exportConfigFile()">📥 Export config.js File</button>
+              <button class="btn-admin btn-admin-danger" onclick="resetToDefault()">🔄 Reset Factory Defaults</button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/admin.js"></script>
+</body>
+
+</html>
